@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Encapsulate field &apos;com.koreait.first.ContriesVO.country_name&apos; in &apos;com.koreait.first.ContriesVO&apos;&#x0D;&#x0A;- Original project: &apos;first&apos;&#x0D;&#x0A;- Original element: &apos;com.koreait.first.ContriesVO.country_name&apos;&#x0D;&#x0A;- Getter method name: &apos;getCountry_name&apos;&#x0D;&#x0A;- Setter method name: &apos;setCountry_name&apos;&#x0D;&#x0A;- Field visibility: &apos;public&apos;&#x0D;&#x0A;- Use getter and setter methods in declaring type" comments="false" declaring="true" description="Encapsulate field &apos;country_name&apos;" flags="589830" getter="getCountry_name" id="org.eclipse.jdt.ui.self.encapsulate" input="/src&lt;com.koreait.first{ContriesVO.java[ContriesVO^country_name" insertion="-1" setter="setCountry_name" stamp="1594610703347" version="1.0" visibility="1"/>
+</session>
