@@ -35,7 +35,7 @@
 		
 		while(rs.next()){
 			int i_board = rs.getInt("i_board");
-			String title = rs.getString("title");
+			String title = rs.getNString("title");
 			
 			BoardVO vo = new BoardVO();
 			vo.setI_board(i_board);
