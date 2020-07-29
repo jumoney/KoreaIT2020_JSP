@@ -46,7 +46,9 @@
 		
 	}catch(Exception e) {
 		e.printStackTrace();
-	}finally{
+	}finally {
+		/*rs, ps, con 의 try catch문을 따로 사용한 이유는 rs든 
+		어디든 예외가 발생해도 다른 것들이라도 닫아주기 위해*/
 		if(rs != null) {try {rs.close();} catch(Exception e){} }
 		if(ps != null) {try {ps.close();} catch(Exception e){} }
 		if(con != null) {try {con.close();} catch(Exception e){} }
@@ -69,7 +71,11 @@
 	<%for(BoardVO vo : boardList) { %>
 	<tr>
 	<th><%=vo.getI_board() %></th>
-	<th><%=vo.getTitle()%></th>
+	<th>
+	<a href="/jsp/boardDetail.jsp?i_board=<%=vo.getI_board()%>">
+	<%=vo.getTitle()%>
+	</a>
+	</th>
 	</tr>
 	<%} %>
 	</table>
