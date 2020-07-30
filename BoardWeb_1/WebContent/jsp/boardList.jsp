@@ -9,7 +9,6 @@
 	String url = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String userName = "hr";
 	String password = "koreait2020";
-
 	Class.forName("oracle.jdbc.driver.OracleDriver");
 	
 	Connection con = DriverManager.getConnection(url, userName, password);
@@ -27,7 +26,6 @@
 	ResultSet rs = null;
 	
 	String sql = " SELECT i_board, title FROM t_board ";
-
 	try{
 		con = getCon();
 		ps = con.prepareStatement(sql);
@@ -40,7 +38,6 @@
 			BoardVO vo = new BoardVO();
 			vo.setI_board(i_board);
 			vo.setTitle(title);
-			
 			boardList.add(vo);
 		}
 		
