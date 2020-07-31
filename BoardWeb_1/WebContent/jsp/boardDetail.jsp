@@ -87,7 +87,7 @@
 </style>
 </head>
 <body>
-   <div><a href="/jsp/boardlist.jsp">리스트로 가기</a>
+   <div><a href="/jsp/boardList.jsp">리스트로 가기</a>
       <a href="#" onclick="procDel(<%=i_board%>)">삭제</a>
       </div>
 

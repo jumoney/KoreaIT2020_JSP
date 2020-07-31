@@ -53,13 +53,3 @@ public Connection getCon() throws Exception {
          break;
    }
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-   <div><%=dn%>개의 값이 삭제되었습니다.</div>
-</body>
-</html></html>
