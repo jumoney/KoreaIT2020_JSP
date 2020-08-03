@@ -25,7 +25,7 @@
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	
-	String sql = " SELECT i_board, title FROM t_board ";
+	String sql = " SELECT i_board, title FROM t_board ORDER BY i_board DESC";
 	try{
 		con = getCon();
 		ps = con.prepareStatement(sql);

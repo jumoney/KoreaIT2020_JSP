@@ -19,32 +19,50 @@ public Connection getCon() throws Exception {
 	String ctnt = request.getParameter("ctnt");
 	String strI_student = request.getParameter("i_student");
 	
+	if("".equals(title) || "".equals(ctnt) || "".equals(strI_student)) {
+		response.sendRedirect("/jsp/boardWrite.jsp?err=10");
+		return;
+	}
+	int i_student = Integer.parseInt(strI_student);
+	
 	Connection con = null;
 	PreparedStatement ps = null;
 	
 	String sql = " INSERT INTO t_board(i_board, title, ctnt, i_student) " 
-		+	" SELECT nvl(max(i_board), 0) + 1, ?, ? ,? " 
+		+	" SELECT nvl(max(i_board), 0) + 1, ?, ?, ? " 
 		+	" FROM t_board ";
 	
+	int result = -1;
 	try{
 		con = getCon();
 		ps = con.prepareStatement(sql);
 	 
 	    ps.setString(1, title); 
 	    ps.setString(2, ctnt);
-	    ps.setString(3, strI_student); 
-	    ps.executeUpdate();
+	    ps.setInt(3, i_student); 
 	    
+	    result = ps.executeUpdate();
 	}catch(Exception e) {
 		e.printStackTrace();
 	}finally {
 		/*rs, ps, con 의 try catch문을 따로 사용한 이유는 rs든 
 		어디든 예외가 발생해도 다른 것들이라도 닫아주기 위해*/
-		
 		if(ps != null) {try {ps.close();} catch(Exception e){} }
 		if(con != null) {try {con.close();} catch(Exception e){} }
 	}
-	
+	int err = 0;
+	switch(result) {
+	case 1:
+		response.sendRedirect("/jsp/boardList.jsp");
+		return;
+	case 0:
+		err = 10;
+		break;
+	case -1:
+		err = 20;
+		break;
+	}
+	response.sendRedirect("/jsp/boardWrite.jsp?err=" + err);
 %>
 <div>title : <%= title %></div>
 <div>ctnt : <%= ctnt %></div>

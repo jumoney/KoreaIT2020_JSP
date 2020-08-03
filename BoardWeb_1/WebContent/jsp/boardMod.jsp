@@ -1,9 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import = "java.sql.*" %>
-<%@ page import = "java.util.*" %>
-<%@ page import = "com.koreait.web.BoardVO" %>
-    
+	pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.koreait.web.BoardVO"%>
+<%
+	String msg = "";
+	String err = request.getParameter("err");
+
+	if (err != null) {
+		switch (err) {
+			case "10":
+				msg = "등록할 수 없습니다.";
+				break;
+			case "20":
+				msg = "DB 에러 발생";
+				break;
+	}
+}
+%>
 <%!   
    public Connection getCon() throws Exception {
       String url = "jdbc:oracle:thin:@localhost:1521:orcl";
@@ -17,22 +31,15 @@
    }
 %>
 <%
-   String strI_board = request.getParameter("i_board");         //boardlist에서 보내준 값 받기. (? 뒤에 있는 value값 가져오는 것. 만약 '...?i_board=3&title='value'' 을 보냈다면  title값도 받아올 수 있음.)
-                                                   //but 굳이 여러개 받아올 필요 없다.(pk값 받아왔으니 됐다.)
-                                                   //만약 넘어올 value값이 없다면 strI_board에 null 저장됨.
-                                                   //request는 내장객체. 이 소스가 들어있는 클래스의 매개변수 중 request 객체가 있다. (들어오는 요청을 받는 매개변수)
-                                                   //\workspace_web\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\work\Catalina\localhost\ROOT\org\apache\jsp\jsp 에 있는 소스파일 참고.
-                                                   //레퍼런스 변수 앞에 final이 있으면 주소값 고정(값은 바꿀 수 있음. 값을 고정하려면 그 안에 선언한 전역변수에 붙여줘야 함) ->속도가 빨라진다.
-                                                   
-   if(strI_board == null){                              //만약에 i_board가 넘어오지 않으면 strI_board 값은 null이 됨.
-                                                //strI_board 가 null 인 경우는 i_board에 저장될 수 없어서 에러터진다. 예외처리 해줘야 함(ex> 경고창 띄우기 등)
+   String strI_board = request.getParameter("i_board");
+   if(strI_board == null){                              
 %>
    <script>
       alert('잘못된 접근입니다.');
       location.href='/jsp/boardList.jsp';
    </script>
 <%
-      return;                  //return 없으면 아래 소스 다 실행한다. return 으로 꼭 종료해줘야 한다.
+      return;
    }
                                                    
    int i_board = Integer.parseInt(strI_board);
@@ -80,29 +87,55 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상세페이지</title>
+<title>글수정페이지</title>
 <style>
-   table {border-collapse:collapse;}
-   th, td{text-align:center; border: 1px solid black; width: 100px; height: 50px; }   
+	#msg{ color: red;}
 </style>
 </head>
 <body>
-   <div><a href="/jsp/boardList.jsp">리스트로 가기</a>
-      <a href="#" onclick="procDel(<%=i_board%>)">삭제</a>
-      <a href="/jsp/boardMod.jsp?i_board=<%=i_board %>">수정</a>
-      </div>
-
-   <div>제목 : <%=vo.getTitle() %></div>
-   <div>내용 : <%=vo.getCtnt()%></div>
-   <div>작성자 : <%=vo.getI_student()%></div>
-   
-   <script>
-      function procDel(i_board){
-         //alert('i_board : ' + i_board);
-         if(confirm('삭제 하시겠습니까?')){            //confirm 의 return타입 : boolean
-            location.href = '/jsp/boardDel.jsp?i_board='+i_board;            //boardDel.jsp로 i_board 값 보냄.
-         }
-      }
-   </script>
+	<div>
+		<div>
+			<a href="/jsp/boardList.jsp">리스트로 가기</a>
+		</div>
+		<div id = "msg"><%= msg %></div>
+		<form id="frm" action="/jsp/boardModProc.jsp" method="post" onsubmit="return chk()">
+			<div>
+				<label>제목 : <input type="text" name="title" value="<%=vo.getTitle()%>"></input></label>
+			</div>
+			<div>
+				<label>내용 : <textarea name="ctnt"><%=vo.getCtnt()%></textarea></label>
+			</div>
+			<div>
+				<label>글쓴이 : <input type="text" name="i_student" value="<%=vo.getI_student()%>"></input></label>
+			</div>
+			<div>
+				<input type="submit" value="글수정">
+			</div>
+			</form>
+	</div>
+	<script>
+	function eleVaild(ele, nm) {
+		if(ele.value.length == 0) {
+			alert(nm + "을(를) 입력해 주세요.");
+			ele.focus()
+			return true;
+		}
+	}
+	
+	
+	function chk() {
+		//console.log(`title: \${frm.title.value}`);
+		if(eleVaild(frm.title, '제목')) {
+			return false;
+		} else if(eleVaild(frm.ctnt, '내용'))  {
+			return false; 
+		} else if(eleVaild(frm.i_student, '작성자')) {
+			
+			return false; 
+		}
+	}
+	
+	</script>
+	
 </body>
 </html>
