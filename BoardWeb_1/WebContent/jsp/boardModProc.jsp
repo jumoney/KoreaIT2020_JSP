@@ -55,7 +55,7 @@ public Connection getCon() throws Exception {
 	int err = 0;
 	switch(result) {
 	case 1:
-		response.sendRedirect("/jsp/boardList.jsp");
+		response.sendRedirect("/jsp/boardDetail.jsp?i_board=" + i_board);
 		return;
 	case 0:
 		err = 10;
