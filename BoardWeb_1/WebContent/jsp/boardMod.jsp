@@ -40,8 +40,7 @@
    </script>
 <%
       return;
-   }
-                                                   
+   }                                                
    int i_board = Integer.parseInt(strI_board);
                                                    
    String sql = "SELECT title, ctnt, i_student FROM t_board where i_board = ?" ;
@@ -69,7 +68,7 @@
          String ctnt = rs.getNString("ctnt");   
          int i_student = rs.getInt("i_student");
          //nm = rs.getNString("nm");
-         
+         vo.setI_board(i_board);
          vo.setTitle(title);
          vo.setCtnt(ctnt);
          vo.setI_student(i_student);
@@ -111,6 +110,7 @@
 			<div>
 				<input type="submit" value="글수정">
 			</div>
+			<input type="hidden" name="i_board" value="<%=vo.getI_board()%>"></input>
 			</form>
 	</div>
 	<script>
