@@ -30,8 +30,11 @@ public Connection getCon() throws Exception {
 	Connection con = null;
 	PreparedStatement ps = null;
 	
-	String sql = " UPDATE t_board SET title = ?, ctnt = ?, i_student = ? " 
-		+	" WHERE i_board = ? ";
+	String sql = " UPDATE t_board" 
+			+ " SET title = ?, "
+			+ " ctnt = ?, " 
+			+ " i_student = ? " 
+			+ " WHERE i_board = ? ";
 	
 	int result = -1;
 	try{

@@ -43,15 +43,13 @@
    }                                                
    int i_board = Integer.parseInt(strI_board);
                                                    
-   String sql = "SELECT title, ctnt, i_student FROM t_board where i_board = ?" ;
-   //String sql = "SELECT title, ctnt, A.i_student, nm FROM t_board A inner join t_student B on A.I_student=B.I_student where i_board="+ strI_board;  //조인
-   
+   BoardVO vo = new BoardVO();
    Connection con = null;
    PreparedStatement ps = null;
    ResultSet rs = null;
    
-   BoardVO vo = new BoardVO();
-   //String nm=null;
+   String sql = "SELECT title, ctnt, i_student FROM t_board where i_board = ?" ;
+  
    
    try{
       con = getCon();
@@ -67,7 +65,7 @@
          String title = rs.getNString("title");   //getString과 똑같지만 getString은 에러날 가능성이 아주야아아악간 있다(톰캣에서 어떤 기능을 끄면...). getNString은 안전.
          String ctnt = rs.getNString("ctnt");   
          int i_student = rs.getInt("i_student");
-         //nm = rs.getNString("nm");
+        
          vo.setI_board(i_board);
          vo.setTitle(title);
          vo.setCtnt(ctnt);
@@ -86,7 +84,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>글수정페이지</title>
+<title>글수정</title>
 <style>
 	#msg{ color: red;}
 </style>
@@ -98,6 +96,7 @@
 		</div>
 		<div id = "msg"><%= msg %></div>
 		<form id="frm" action="/jsp/boardModProc.jsp" method="post" onsubmit="return chk()">
+			<input type="hidden" name="i_board" value="<%=vo.getI_board()%>"></input>
 			<div>
 				<label>제목 : <input type="text" name="title" value="<%=vo.getTitle()%>"></input></label>
 			</div>
@@ -110,7 +109,6 @@
 			<div>
 				<input type="submit" value="글수정">
 			</div>
-			<input type="hidden" name="i_board" value="<%=vo.getI_board()%>"></input>
 			</form>
 	</div>
 	<script>
@@ -124,7 +122,6 @@
 	
 	
 	function chk() {
-		//console.log(`title: \${frm.title.value}`);
 		if(eleVaild(frm.title, '제목')) {
 			return false;
 		} else if(eleVaild(frm.ctnt, '내용'))  {
