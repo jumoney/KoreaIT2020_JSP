@@ -1,4 +1,4 @@
-package com.koreait.web;
+package com.koreait.board.vo;
 
 public class BoardVO {
 	private int i_board;
