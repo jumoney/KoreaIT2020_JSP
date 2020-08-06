@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
+<fullyQualifiedTypeName name="com.koreait.board.db.DbCon"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="java.sql.Connection"/>
+<fullyQualifiedTypeName name="com.koreait.board.vo.BoardVO"/>
+<fullyQualifiedTypeName name="com.koreait.board.db.BoardDAO"/>
 </qualifiedTypeNameHistroy>
