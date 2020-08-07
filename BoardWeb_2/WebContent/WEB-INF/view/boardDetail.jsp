@@ -7,6 +7,10 @@
 <title>상세 페이지</title>
 </head>
 <body>
-	상세페이지
+	<div>상세페이지</div>
+	<div>제목 : ${data.i_board}</div>
+	<div>제목 : ${data.title}</div>
+   <div>내용 : ${data.ctnt}</div>
+   <div>작성자 : ${data.i_student}</div>
 </body>
 </html>

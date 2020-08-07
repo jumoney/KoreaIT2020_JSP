@@ -20,7 +20,9 @@
 
 </head>
 <body>
-	<div>게시판 리스트</div>
+	<div>게시판 리스트
+	<a href="/boardWrite"><button>글쓰기</button></a>
+	</div>
 	<table>
 		<tr>
 			<th>No</th>
