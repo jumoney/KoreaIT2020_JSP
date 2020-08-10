@@ -6,6 +6,36 @@ import java.util.*;
 import com.koreait.board.vo.BoardVO;
 
 public class BoardDAO {
+	
+	// insert
+		public static int insBoard(BoardVO param) {
+			int result = 0;
+			Connection con = null;
+			PreparedStatement ps = null;
+			
+			
+			String sql = " INSERT INTO t_board "
+					+ "(i_board, title, ctnt, i_student) " 
+				+	" VALUES "
+				+ "(seq_board.nextval, ?, ?, ?)";	
+			
+			try{
+				con = DbCon.getCon();
+				ps = con.prepareStatement(sql);
+			    ps.setString(1, param.getTitle()); 
+			    ps.setString(2, param.getCtnt());
+			    ps.setInt(3, param.getI_student()); 
+			    
+			    result = ps.executeUpdate();
+			    
+			}catch(Exception e) {
+				e.printStackTrace();
+			}finally {
+				DbCon.close(con, ps);
+			}
+			
+			return result;
+		}
 
 	public static List<BoardVO> selBoardList() {
 		List<BoardVO> list = new ArrayList();
@@ -78,30 +108,5 @@ public class BoardDAO {
 		return vo;
 	}
 
-	// insert
-	public static void insertBoard(BoardVO param) {
-		BoardVO vo = null;
-		Connection con = null;
-		PreparedStatement ps = null;
-		
-		
-		String sql = " INSERT INTO t_board(i_board, title, ctnt, i_student) " 
-			+	" SELECT nvl(max(i_board), 0) + 1, ?, ?, ? " 
-			+	" FROM t_board ";
-		
-		try{
-			con = DbCon.getCon();
-			ps = con.prepareStatement(sql);
-		 
-		    ps.setString(1, param.getTitle()); 
-		    ps.setString(2, param.getCtnt());
-		    ps.setInt(3, param.getI_student()); 
-		    ps.executeQuery();
-		    
-		}catch(Exception e) {
-			e.printStackTrace();
-		}finally {
-			DbCon.close(con, ps);
-		}
-	}
+	
 }

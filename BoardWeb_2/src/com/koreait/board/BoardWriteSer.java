@@ -24,19 +24,17 @@ public class BoardWriteSer extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		BoardVO param = null;
 		String title = request.getParameter("title");
 		String ctnt = request.getParameter("ctnt");
 		String strI_student = request.getParameter("i_student");
 		int i_student = Integer.parseInt(strI_student);
-		
 	
-		param = new BoardVO();
+		BoardVO param  = new BoardVO();
 		param.setTitle(title);
 		param.setCtnt(ctnt);
 		param.setI_student(i_student);
 		
-		BoardDAO.insertBoard(param);
+		int result = BoardDAO.insBoard(param);
 		
 		String jsp = "/boardList";
 		response.sendRedirect(jsp);

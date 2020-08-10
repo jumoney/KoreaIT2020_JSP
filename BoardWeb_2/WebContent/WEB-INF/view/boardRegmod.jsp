@@ -56,7 +56,6 @@
 		}
 	}
 	
-	
 	function chk() {
 		//console.log(`title: \${frm.title.value}`);
 		if(eleVaild(frm.title, '제목')) {
@@ -68,7 +67,6 @@
 			return false; 
 		}
 	}
-	
 	</script>
 	
 </body>
