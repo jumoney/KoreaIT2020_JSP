@@ -36,8 +36,14 @@ public class BoardWriteSer extends HttpServlet {
 		
 		int result = BoardDAO.insBoard(param);
 		
-		String jsp = "/boardList";
-		response.sendRedirect(jsp);
+		if(result == 1) {
+			response.sendRedirect("/boardList");
+		} else {
+			request.setAttribute("msg", "에러가 발생하였습니다.");
+			doGet(request, response);
+		}
+		
+		
 		
 		
 	}

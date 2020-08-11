@@ -3,7 +3,7 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
 <%
-	String msg = "";
+	String msg = (String)request.getAttribute("msg");
 	String err = request.getParameter("err");
 
 	if (err != null) {
@@ -13,8 +13,8 @@
 				break;
 			case "20":
 				msg = "DB 에러 발생";
-				break;
-	}
+				break;		
+	}                              
 }
 %>
 <!DOCTYPE html>
@@ -31,7 +31,8 @@
 		<div>
 			<a href="boardList">리스트로 가기</a>
 		</div>
-		<div id = "msg"><%= msg %></div>
+		<div>글쓰기</div>
+		<div id = "msg">${msg}</div>
 		<form id="frm" action="/boardWrite" method="post" onsubmit="return chk()">
 			<div>
 				<label>제목 : <input type="text" name="title"></input></label>
