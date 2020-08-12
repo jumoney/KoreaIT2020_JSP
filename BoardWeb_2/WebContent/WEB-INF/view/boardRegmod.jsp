@@ -21,33 +21,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>글쓰기페이지</title>
-<style>
-	#msg{ color: red;}
-</style>
+<title>${data == null? '글등록' : '글수정' }</title>
 </head>
 <body>
-	<div>
-		<div>
-			<a href="boardList">리스트로 가기</a>
-		</div>
-		<div>글쓰기</div>
-		<div id = "msg">${msg}</div>
-		<form id="frm" action="/boardWrite" method="post" onsubmit="return chk()">
-			<div>
-				<label>제목 : <input type="text" name="title"></input></label>
-			</div>
-			<div>
-				<label>내용 : <textarea name="ctnt"></textarea></label>
-			</div>
-			<div>
-				<label>작성자 : <input type="text" name="i_student"></input></label>
-			</div>
-			<div>
-				<input type="submit" value="글등록">
-			</div>
-			</form>
-	</div>
+   <div>                              
+      <form id="frm" action="/${data == null? 'boardWrite' : 'boardMod' }" method="post" onsubmit="return chk()">   
+      <div>${msg}</div>
+         <input type = "hidden" name ="i_board" value="${data.i_board }">
+         <div><label>제목: <input type="text" name="title" value="${data.title }"></label></div>
+         <div><label>내용: <textarea name="ctnt">${data.ctnt }</textarea></label></div>
+         <div><label>작성자: <input type="text" name="i_student" value="${data.i_student}"${data.i_student == null ? '': 'readonly'}></label></div>
+         <div><input type="submit" value="${data == null? '글등록' : '글수정' }"></div>
+      </form>
+   </div>
 	<script>
 	function eleVaild(ele, nm) {
 		if(ele.value.length == 0) {
