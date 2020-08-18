@@ -2,9 +2,14 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.koreait.board.db.DbCon"/>
 <fullyQualifiedTypeName name="java.awt.List"/>
-<fullyQualifiedTypeName name="java.sql.Connection"/>
-<fullyQualifiedTypeName name="com.koreait.board.db.BoardDAO"/>
+<fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
 <fullyQualifiedTypeName name="com.koreait.board.common.Utils"/>
 <fullyQualifiedTypeName name="com.koreait.board.vo.BoardVO"/>
-<fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
+<fullyQualifiedTypeName name="com.koreait.board.db.BoardDAO"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.ViewResolver"/>
+<fullyQualifiedTypeName name="java.sql.Connection"/>
+<fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.vo.UserVO"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.db.JdbcUpdateInterface"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.db.JdbcTamplate"/>
 </qualifiedTypeNameHistroy>
