@@ -1,8 +1,31 @@
 package com.koreait.pjt;
 
+import java.io.IOException;
 import java.security.*;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.koreait.pjt.vo.UserVO;
+
 public class MyUtils {
+	
+	public static UserVO getLoginUser(HttpServletRequest request) {
+		HttpSession hs = request.getSession();
+		return (UserVO)hs.getAttribute(Const.LOGIN_USER);
+	}
+	
+	//return true:로그인이 안됨!, false: 로그인 된 상태
+	public static boolean isLogout(HttpServletRequest request) throws IOException {
+		HttpSession hs = request.getSession();
+		if(null == hs.getAttribute(Const.LOGIN_USER)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static String encryptString(String str) {
 		String sha = "";
 
@@ -25,5 +48,27 @@ public class MyUtils {
 	      }
 
 	      return sha;
+	}
+	
+	public static int parseStrToInt(String str, int n) {
+		int num = n;
+		try {
+			num = Integer.parseInt(str);
+		} catch (Exception e) {
+			
+		}
+		
+		return num;
+	}
+	
+	public static int parseStrToInt(String str) {
+		int num = 0;
+		try {
+			num = Integer.parseInt(str);
+		} catch (Exception e) {
+			
+		}
+		
+		return num;
 	}
 }

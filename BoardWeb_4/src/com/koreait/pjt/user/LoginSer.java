@@ -19,6 +19,13 @@ public class LoginSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		HttpSession hs = request.getSession();
+		if(null != hs.getAttribute(Const.LOGIN_USER)) {
+			response.sendRedirect("/board/list");
+			return;
+		}
+		
 		ViewResolver.forward("user/login", request, response);
 	}
 
@@ -31,7 +38,7 @@ public class LoginSer extends HttpServlet {
 		param.setUser_id(user_id);
 		param.setUser_pw(encrypt_pw);
 		
-		int result = UserDAO.selUser(param);
+		int result = UserDAO.login(param);
 		
 		if(result != 1) { //에러처리
 			String msg = null;

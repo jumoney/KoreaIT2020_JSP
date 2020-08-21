@@ -1,6 +1,8 @@
 package com.koreait.pjt.board;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import com.koreait.pjt.Const;
 import com.koreait.pjt.ViewResolver;
+import com.koreait.pjt.db.BoardDAO;
 import com.koreait.pjt.vo.UserVO;
 
 
@@ -19,12 +22,23 @@ public class BoardListSer extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		
+	
 		if(null == hs.getAttribute(Const.LOGIN_USER)) {
 			response.sendRedirect("/login");
 			return;
 		}
-		ViewResolver.forward("board/list", request, response);
+		List list = BoardDAO.selBoardList();
+		request.setAttribute("list", list);
+		
+		if(request.getParameter("err") != null) {
+			int err = Integer.parseInt(request.getParameter("err"));
+			request.setAttribute("err", err);
+			System.out.println(err);
+		}
+		
+		ViewResolver.forwardLoginChk("board/list", request, response);
+		
+		
 		
 	}
 
