@@ -43,7 +43,7 @@ public class BoardDetailSer extends HttpServlet {
 		}
 		// 단독으로 조회수 올기기 방지! == [end]
 		
-		request.setAttribute("data", BoardDAO.selBoard(i_board));
+		request.setAttribute("data", BoardDAO.selBoard(i_board, loginUser.getI_user()));
 		ViewResolver.forward("board/detail", request, response);
 	}
 

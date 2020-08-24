@@ -86,22 +86,27 @@ public class BoardDAO {
 		return list;
 	}
 	
-	public static BoardDomain selBoard(final int i_board) {
+	public static BoardDomain selBoard(final int i_board, int i_user) {
 		BoardDomain result = new BoardDomain();
 		result.setI_board(i_board);
 		
-		String sql = " SELECT B.nm, i_board "
-				+ " , A.title, A.ctnt, A.hits, TO_CHAR(A.r_dt, 'YYYY/MM/DD HH24:MI') as r_dt, A.i_user "
+		String sql = " SELECT B.nm, A.i_board "
+				+ " , A.title, A.ctnt, A.hits, TO_CHAR(A.r_dt, 'YYYY/MM/DD HH24:MI') as r_dt, "
+				+ "A.i_user, DECODE(C.i_user, null, 0, 1) as yn_like "
 				+ " FROM t_board4 A "
 				+ " INNER JOIN t_user B "
 				+ " ON A.i_user = B.i_user "
+				+ " LEFT JOIN t_board4_like C " 
+				+ " ON A.i_board = C.i_board " 
+				+ " AND C.i_user = ?"
 				+ " WHERE A.i_board = ? ";
 		
 		int resultInt = JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, i_board);
+				ps.setInt(2, i_board);
+				ps.setInt(1, i_user);
 			}
 
 			@Override
@@ -114,6 +119,7 @@ public class BoardDAO {
 					result.setHits(rs.getInt("hits"));
 					result.setR_dt(rs.getNString("r_dt"));
 					result.setI_user(rs.getInt("i_user"));
+					result.setYn_like(rs.getInt("yn_like"));
 				}
 				return 0;
 			}
@@ -121,6 +127,7 @@ public class BoardDAO {
 		
 		return result;
 	}
+	
 	
 	public static int insBoard(BoardVO param) {		
 		String sql = " INSERT INTO t_board4 "

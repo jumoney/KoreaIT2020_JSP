@@ -11,7 +11,6 @@
 <fullyQualifiedTypeName name="java.security.MessageDigest"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.db.JdbcSelectInterface"/>
 <fullyQualifiedTypeName name="java.sql.ResultSet"/>
-<fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.Const"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.ViewResolver"/>
 <fullyQualifiedTypeName name="java.awt.List"/>
@@ -25,4 +24,6 @@
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.UserVO"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardVO"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardDomain"/>
+<fullyQualifiedTypeName name="javax.servlet.ServletContext"/>
+<fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
 </qualifiedTypeNameHistroy>
