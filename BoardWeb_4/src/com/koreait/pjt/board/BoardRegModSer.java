@@ -27,6 +27,8 @@ public class BoardRegModSer extends HttpServlet {
 	// 화면 띄우는 용도(등록창/수정창)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession hs = request.getSession();
+		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
 		if (MyUtils.isLogout(request)) {
 			response.sendRedirect("/login");
 			return;
@@ -36,7 +38,10 @@ public class BoardRegModSer extends HttpServlet {
 
 		if (strI_board != null) {
 			int i_board = MyUtils.parseStrToInt(strI_board, 0); // 문자열을 정수로 바꿈.혹시 숫자가 아닌 문자열이 섞여있으면 0이 리턴
-			request.setAttribute("data", BoardDAO.selBoard(i_board)); // DB로 값 받기
+			BoardVO param = new BoardVO();
+			param.setI_board(i_board);
+			param.setI_user(loginUser.getI_user());
+			request.setAttribute("data", BoardDAO.selBoard(param)); // DB로 값 받기
 		}
 
 		ViewResolver.forwardLoginChk("board/regmod", request, response);

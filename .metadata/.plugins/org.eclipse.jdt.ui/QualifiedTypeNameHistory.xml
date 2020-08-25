@@ -26,4 +26,5 @@
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardDomain"/>
 <fullyQualifiedTypeName name="javax.servlet.ServletContext"/>
 <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.vo.UserLoginHistoryVO"/>
 </qualifiedTypeNameHistroy>

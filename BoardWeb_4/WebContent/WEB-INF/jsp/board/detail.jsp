@@ -6,7 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>상세보기</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <style>
+.pointerCursor{cursor:pointer;}
 </style>
 </head>
 <body>
@@ -21,14 +24,16 @@
 		</c:if>
 	</div>
 	<h3>제목 : ${data.title}</h3>
-	<c:choose>
+	<div class="pointerCursor" onclick="toggleLike(${data.yn_like})">
+		<c:choose>
 		<c:when test="${data.yn_like != 0 }">
-			<p>💚</p>
+			<span class="material-icons" style="color:red;"> favorite </span>
 		</c:when>
 		<c:otherwise>
-			<p>🖤</p>
+			<span class="material-icons"> favorite_border </span>
 		</c:otherwise>
 	</c:choose>
+	</div>	
 	<hr>
 	<div>작성자 : ${data.nm}</div>
 	<hr>
@@ -36,9 +41,14 @@
 	<hr>
 	<div>작성일자 : ${data.r_dt}</div>
 	<div>조회수 : ${data.hits}</div>
+	<div>좋아요 개수 : ${data.count}</div>
 	<script>
 		function submitDel() {
 			delFrm.submit()
+		}
+		
+		function toggleLike(yn_like) {
+			location.href ="/board/toggleLike?i_board=${data.i_board}&yn_like=" + yn_like;
 		}
 	</script>
 </body>

@@ -10,7 +10,14 @@ public class BoardVO {
 	private String r_dt;
 	private String m_dt;
 	private String nm;
+	private int count;
 	
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
 	public String getNm() {
 		return nm;
 	}

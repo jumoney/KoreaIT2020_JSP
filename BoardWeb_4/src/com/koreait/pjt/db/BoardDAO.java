@@ -14,6 +14,21 @@ import com.koreait.pjt.vo.UserVO;
 
 public class BoardDAO {
 	
+	public static int insBoardLike(BoardVO param) {		
+		String sql = " INSERT INTO t_board4_like "
+				+ " (i_board, i_user) "
+				+ " VALUES "
+				+ " (?, ?) ";
+				
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {				
+				ps.setInt(1, param.getI_board());
+				ps.setInt(2, param.getI_user());		
+			}
+		});
+	}
+	
 	public static int updBoard(final BoardVO param) {		
 		String sql = " UPDATE t_board4 "
 				+ " SET  "
@@ -86,13 +101,13 @@ public class BoardDAO {
 		return list;
 	}
 	
-	public static BoardDomain selBoard(final int i_board, int i_user) {
+	public static BoardDomain selBoard(BoardVO param) {
 		BoardDomain result = new BoardDomain();
-		result.setI_board(i_board);
+		result.setI_board(param.getI_board());
 		
 		String sql = " SELECT B.nm, A.i_board "
 				+ " , A.title, A.ctnt, A.hits, TO_CHAR(A.r_dt, 'YYYY/MM/DD HH24:MI') as r_dt, "
-				+ "A.i_user, DECODE(C.i_user, null, 0, 1) as yn_like "
+				+ "A.i_user, DECODE(C.i_user, null, 0, 1) as yn_like, (select count(*) from t_board4_like where i_board = ?)as count "
 				+ " FROM t_board4 A "
 				+ " INNER JOIN t_user B "
 				+ " ON A.i_user = B.i_user "
@@ -105,21 +120,22 @@ public class BoardDAO {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException {
-				ps.setInt(2, i_board);
-				ps.setInt(1, i_user);
+				ps.setInt(1, param.getI_board());
+				ps.setInt(2, param.getI_user());
+				ps.setInt(3, param.getI_board());
 			}
 
 			@Override
 			public int executeQuery(ResultSet rs) throws SQLException {
 				if(rs.next()) {
-					result.setI_board(rs.getInt("i_board"));
 					result.setNm(rs.getNString("nm"));
 					result.setTitle(rs.getNString("title"));
 					result.setCtnt(rs.getNString("ctnt"));
 					result.setHits(rs.getInt("hits"));
 					result.setR_dt(rs.getNString("r_dt"));
-					result.setI_user(rs.getInt("i_user"));
+					result.setI_user(rs.getInt("i_user")); // 작성자 i_user
 					result.setYn_like(rs.getInt("yn_like"));
+					result.setCount(rs.getInt("count"));
 				}
 				return 0;
 			}
@@ -150,6 +166,24 @@ public class BoardDAO {
 		
 		String sql = " DELETE "
 				+ " FROM t_board4 "
+				+ " WHERE i_board = ? AND i_user = ? ";
+			
+		
+		int resultInt = JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {				
+				ps.setInt(1, param.getI_board());
+				ps.setInt(2, param.getI_user());
+			}
+		});
+		
+		return resultInt;
+	}
+	
+	public static int delBoardLike(BoardVO param) {
+		
+		String sql = " DELETE "
+				+ " FROM t_board4_like "
 				+ " WHERE i_board = ? AND i_user = ? ";
 			
 		
