@@ -16,15 +16,15 @@
 <fullyQualifiedTypeName name="java.awt.List"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="com.koreait.pjt.db.BoardDAO"/>
 <fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
 <fullyQualifiedTypeName name="java.text.DateFormat"/>
 <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
-<fullyQualifiedTypeName name="com.koreait.pjt.MyUtils"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.UserVO"/>
-<fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardVO"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardDomain"/>
 <fullyQualifiedTypeName name="javax.servlet.ServletContext"/>
 <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.UserLoginHistoryVO"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.MyUtils"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardVO"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.db.BoardDAO"/>
 </qualifiedTypeNameHistroy>

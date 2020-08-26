@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.koreait.pjt.vo.BoardCmtVO;
 import com.koreait.pjt.vo.BoardDomain;
 import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;

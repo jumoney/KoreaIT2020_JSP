@@ -33,6 +33,7 @@ public class ToggleLikeSer extends HttpServlet {
 		if(yn_like == 0) { // 좋아요 처리
 			BoardDAO.insBoardLike(param);
 		}else if(yn_like == 1) { // 좋아요 처리 취소
+			
 			BoardDAO.delBoardLike(param);
 		}
 			
