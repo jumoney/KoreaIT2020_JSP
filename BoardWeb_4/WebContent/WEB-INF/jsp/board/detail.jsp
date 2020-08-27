@@ -138,7 +138,7 @@ th, td {
 				<form id="delFrm" action="/board/del" method="post">
 					<input type="hidden" name="i_board" value="${data.i_board}">
 					<button type="submit">
-						<a href="#" onclick="submitDel()">삭제</a>
+						<a onclick="submitDel()">삭제</a>
 					</button>
 				</form>
 			</c:if>
@@ -150,7 +150,8 @@ th, td {
 					type="hidden" name="i_board"  value="${data.i_board}">
 				<div>
 					<input type="text" name="cmt" id="cmt" placeholder="댓글내용"> 
-					<input type="submit" value="전송">
+					<input type="submit" id="cmtSubmit" value="전송">
+					<input type="button" onclick="clkCmtCancel()" value="취소">
 				</div>
 			</form>
 		</div>
@@ -169,10 +170,10 @@ th, td {
 						<c:if test="${loginUser.i_user == item.i_user }">
 						<td>
 							<button type="submit">
-								<a href="#" onclick="updCmt('${item.cmt}','${item.i_cmt}')">수정</a>
+								<a onclick="clkCmtMod('${item.cmt}','${item.i_cmt}')">수정</a>
 							</button>
 							<button type="submit">
-								<a href="/board/cmt?i_board=${data.i_board}&i_cmt=${item.i_cmt}">삭제</a>
+								<a onclick="clkCmtDel(${item.i_cmt})">삭제</a>
 							</button>
 						</td>
 						</c:if>
@@ -184,17 +185,33 @@ th, td {
 
 	<script>
     	function toggleLike(yn_like) {
-    		location.href="/board/toggleLike?i_board=${data.i_board}&yn_like=" + yn_like
+    		location.href='/board/toggleLike?i_board=${data.i_board}&yn_like=' + yn_like
     	}
     
         function submitDel() {
             delFrm.submit()
         }
-        function updCmt(cmt, i_cmt) {
-        	document.getElementById('i_cmt').setAttribute('value', i_cmt);
-        	document.getElementById('cmt').setAttribute('value', cmt);
+        function clkCmtCancel() {
+        	cmtFrm.i_cmt.value = 0;
+        	cmtFrm.cmt.value ='';
+        	cmtSubmit.value='전송';
+        }
+        
+        function clkCmtMod(cmt, i_cmt) {
+        	cmtFrm.i_cmt.value = i_cmt;
+        	cmtFrm.cmt.value = cmt;
+        	cmtFrm.cmtSubmit.value = '수정';
         	
         }
+        
+        function clkCmtDel(i_cmt) {
+        	if(confirm('삭제 하시겠습니까?')){
+        		location.href = '/board/cmt?i_board=${data.i_board}&i_cmt=' + i_cmt;
+                	
+                }
+        }
+        	
+        
     </script>
 </body>
 

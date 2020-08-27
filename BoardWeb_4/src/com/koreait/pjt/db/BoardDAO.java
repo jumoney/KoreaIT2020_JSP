@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.koreait.pjt.Const;
 import com.koreait.pjt.vo.BoardCmtVO;
 import com.koreait.pjt.vo.BoardDomain;
 import com.koreait.pjt.vo.BoardVO;
@@ -63,16 +64,26 @@ public class BoardDAO {
 		});
 	}
 	
-	public static List<BoardVO> selBoardList() {
+	public static List<BoardVO> selBoardList(BoardDomain param) {
 		final List<BoardVO> list = new ArrayList();
 		
-		String sql = " SELECT i_board, title, hits, A.i_user, A.r_dt, nm FROM t_board4 A, t_user B where A.i_user = B.i_user"
-				+ " ORDER BY i_board DESC ";
+		String sql = " select A.* from( " + 
+				" select ROWNUM as rnum, A.* FROM " + 
+				" ( " + 
+				" SELECT i_board, title, hits, A.i_user, A.r_dt, nm FROM t_board4 A, t_user B where A.i_user = B.i_user\r\n" + 
+				" ORDER BY i_board DESC " + 
+				" ) A " + 
+				" Where rownum <= ? " + 
+				" ) A " + 
+				" WHERE A.RNUM > ? ";
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
-			public void prepared(PreparedStatement ps) throws SQLException {}
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getEldx());
+				ps.setInt(2, param.getSldx());
+			}
 
 			@Override
 			public int executeQuery(ResultSet rs) throws SQLException {
@@ -100,6 +111,28 @@ public class BoardDAO {
 		});
 		
 		return list;
+	}
+	
+	//페이징 숫자 가져오기
+	public static int selPagingcnt(BoardDomain param) {
+		String sql = " SELECT CEIL(COUNT(i_board) / ?) FROM t_board4 ";
+		
+		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getRecord_cnt());
+			
+			}
+
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				if(rs.next()) {
+					return rs.getInt(1);
+				}
+				return 0;
+			}
+		});
 	}
 	
 	public static BoardDomain selBoard(BoardVO param) {

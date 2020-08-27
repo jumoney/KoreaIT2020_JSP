@@ -13,9 +13,7 @@
 <fullyQualifiedTypeName name="java.sql.ResultSet"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.Const"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.ViewResolver"/>
-<fullyQualifiedTypeName name="java.awt.List"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
 <fullyQualifiedTypeName name="java.text.DateFormat"/>
 <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
@@ -27,4 +25,9 @@
 <fullyQualifiedTypeName name="com.koreait.pjt.MyUtils"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardVO"/>
 <fullyQualifiedTypeName name="com.koreait.pjt.db.BoardDAO"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.db.BoardCmtDAO"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardCmtVO"/>
+<fullyQualifiedTypeName name="com.koreait.pjt.vo.BoardCmtDomain"/>
 </qualifiedTypeNameHistroy>

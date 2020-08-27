@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.koreait.pjt.Const;
+import com.koreait.pjt.MyUtils;
 import com.koreait.pjt.ViewResolver;
 import com.koreait.pjt.db.BoardDAO;
+import com.koreait.pjt.vo.BoardDomain;
 import com.koreait.pjt.vo.UserVO;
 
 
@@ -22,12 +24,33 @@ public class BoardListSer extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-	
+		
 		if(null == hs.getAttribute(Const.LOGIN_USER)) {
 			response.sendRedirect("/login");
 			return;
 		}
-		List list = BoardDAO.selBoardList();
+		
+		int page = MyUtils.getIntParameter(request, "page");
+		page = (page == 0 ? 1: page);
+		
+		BoardDomain param = new BoardDomain();
+		
+		if(request.getParameter("record_cnt") == null) {
+			param.setRecord_cnt(Const.RECORD_CNT);
+		}else {
+			int record_cnt = MyUtils.getIntParameter(request, "record_cnt");
+			param.setRecord_cnt(record_cnt);
+		}
+
+		int eldx = page * param.getRecord_cnt();
+		int sldx = eldx - param.getRecord_cnt();
+		param.setSldx(sldx);
+		param.setEldx(eldx);
+		
+		List list = BoardDAO.selBoardList(param);
+		
+		request.setAttribute("pagingCnt", BoardDAO.selPagingcnt(param));
+		request.setAttribute("page", page);
 		request.setAttribute("list", list);
 		
 		if(request.getParameter("err") != null) {
