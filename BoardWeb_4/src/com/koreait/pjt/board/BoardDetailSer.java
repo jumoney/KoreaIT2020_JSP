@@ -29,6 +29,16 @@ public class BoardDetailSer extends HttpServlet {
 		HttpSession hs = request.getSession();
 		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
 		
+		int page = MyUtils.getIntParameter(request, "page");
+		String searchText = request.getParameter("searchText");
+		int record_cnt = (int)hs.getAttribute("recordCnt");
+		System.out.println("넘어온 페이지:" + page);
+		System.out.println("넘어온 2:" + record_cnt);
+		page = (page == 0 ? 1 : page);
+		request.setAttribute("page", page);
+		request.setAttribute("record_cnt", record_cnt);
+		
+		
 		if(MyUtils.isLogout(request)) {
 			response.sendRedirect("/login");
 			return;

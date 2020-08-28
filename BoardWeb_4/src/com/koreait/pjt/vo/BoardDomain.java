@@ -3,9 +3,34 @@ package com.koreait.pjt.vo;
 public class BoardDomain extends BoardVO {
 	private String nm;
 	private int yn_like;
-	private int eldx;
-	private int sldx;
-	private int record_cnt;
+	private int record_cnt; //페이지당 나오는 레코드 수 (글 수)
+	private int sIdx;
+	private int eIdx;
+	private String searchText;
+	
+	public String getSearchText() {
+		return searchText;
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+	}
+
+	public int getsIdx() {
+		return sIdx;
+	}
+
+	public void setsIdx(int sIdx) {
+		this.sIdx = sIdx;
+	}
+
+	public int geteIdx() {
+		return eIdx;
+	}
+
+	public void seteIdx(int eIdx) {
+		this.eIdx = eIdx;
+	}
 
 	public int getRecord_cnt() {
 		return record_cnt;
@@ -13,22 +38,6 @@ public class BoardDomain extends BoardVO {
 
 	public void setRecord_cnt(int record_cnt) {
 		this.record_cnt = record_cnt;
-	}
-
-	public int getEldx() {
-		return eldx;
-	}
-
-	public void setEldx(int eldx) {
-		this.eldx = eldx;
-	}
-
-	public int getSldx() {
-		return sldx;
-	}
-
-	public void setSldx(int sldx) {
-		this.sldx = sldx;
 	}
 
 	public int getYn_like() {

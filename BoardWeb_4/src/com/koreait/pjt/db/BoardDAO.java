@@ -67,22 +67,22 @@ public class BoardDAO {
 	public static List<BoardVO> selBoardList(BoardDomain param) {
 		final List<BoardVO> list = new ArrayList();
 		
-		String sql = " select A.* from( " + 
-				" select ROWNUM as rnum, A.* FROM " + 
-				" ( " + 
-				" SELECT i_board, title, hits, A.i_user, A.r_dt, nm FROM t_board4 A, t_user B where A.i_user = B.i_user\r\n" + 
-				" ORDER BY i_board DESC " + 
-				" ) A " + 
-				" Where rownum <= ? " + 
-				" ) A " + 
-				" WHERE A.RNUM > ? ";
+		String sql =  " SELECT A.* FROM ( "
+				+ " SELECT ROWNUM as RNUM, A.* FROM ( "
+				+ " SELECT A.i_board, A.title, A.hits, A.i_user, A.r_dt, B.nm "
+				+ " FROM t_board4 A INNER JOIN t_user B ON A.i_user = B.i_user "
+				+ " WHERE A.title LIKE ? "
+				+ " ORDER BY i_board DESC "
+				+ " ) A WHERE ROWNUM <= ? "
+				+ " ) A WHERE A.RNUM > ? ";
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, param.getEldx());
-				ps.setInt(2, param.getSldx());
+				ps.setNString(1, param.getSearchText());
+				ps.setInt(2, param.geteIdx());
+				ps.setInt(3, param.getsIdx());
 			}
 
 			@Override
@@ -113,27 +113,29 @@ public class BoardDAO {
 		return list;
 	}
 	
-	//페이징 숫자 가져오기
-	public static int selPagingcnt(BoardDomain param) {
-		String sql = " SELECT CEIL(COUNT(i_board) / ?) FROM t_board4 ";
-		
-		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
-
-			@Override
-			public void prepared(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, param.getRecord_cnt());
+	//페이징 숫자 가져오기 
+		public static int selPagingCnt(final BoardDomain param) {
+			String sql = " SELECT CEIL(COUNT(i_board) / ?) FROM t_board4 "
+					+ " WHERE title LIKE ? ";
 			
-			}
+			return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
-			@Override
-			public int executeQuery(ResultSet rs) throws SQLException {
-				if(rs.next()) {
-					return rs.getInt(1);
+				@Override
+				public void prepared(PreparedStatement ps) throws SQLException {
+					ps.setInt(1, param.getRecord_cnt());
+					ps.setNString(2, param.getSearchText());
 				}
-				return 0;
-			}
-		});
-	}
+
+				@Override
+				public int executeQuery(ResultSet rs) throws SQLException {
+					if(rs.next()) {
+						return rs.getInt(1);
+					}
+					return 0;
+				}
+				
+			});
+		}
 	
 	public static BoardDomain selBoard(BoardVO param) {
 		BoardDomain result = new BoardDomain();

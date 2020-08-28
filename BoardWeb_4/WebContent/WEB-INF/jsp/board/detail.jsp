@@ -129,7 +129,7 @@ th, td {
 		<div class="ctnt">${data.ctnt }</div>
 		<div class="btn">
 			<button type="button">
-				<a href="/board/list">목록</a>
+				<a href="/board/list?page=${page}&record_cnt=${record_cnt}&searchText=${param.searchText}">목록</a>
 			</button>
 			<c:if test="${loginUser.i_user == data.i_user }">
 				<button type="submit">
@@ -185,7 +185,7 @@ th, td {
 
 	<script>
     	function toggleLike(yn_like) {
-    		location.href='/board/toggleLike?i_board=${data.i_board}&yn_like=' + yn_like
+    		location.href='/board/toggleLike?i_board=${data.i_board}&yn_like=' + yn_like + '&page=${param.page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}';
     	}
     
         function submitDel() {

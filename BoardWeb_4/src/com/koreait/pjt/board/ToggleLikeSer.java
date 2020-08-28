@@ -23,6 +23,9 @@ public class ToggleLikeSer extends HttpServlet {
 		UserVO loginUser = MyUtils.getLoginUser(request);
 		
 		int i_board = MyUtils.parseStrToInt(request.getParameter("i_board"));
+		int page = MyUtils.parseStrToInt(request.getParameter("page"));
+		int record_cnt = MyUtils.parseStrToInt(request.getParameter("record_cnt"));
+		String searchText = request.getParameter("searchText");
 		int yn_like = MyUtils.parseStrToInt(request.getParameter("yn_like"), 3);
 		
 		BoardVO param = new BoardVO();
@@ -37,7 +40,7 @@ public class ToggleLikeSer extends HttpServlet {
 			BoardDAO.delBoardLike(param);
 		}
 			
-		response.sendRedirect("/board/detail?i_board=" + i_board);
+		response.sendRedirect("/board/detail?i_board=" + i_board + "&page=" + page + "&record_cnt=" + record_cnt + "&searchText=" + searchText);
 		return;
 	}
 
