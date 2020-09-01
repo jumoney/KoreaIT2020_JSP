@@ -1,110 +1,101 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page import="java.util.*"%>
-<%@ page import="com.koreait.pjt.vo.BoardVO"%>
-
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8">
-<title>상세페이지</title>
+<title>리스트</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
-* {
-	font-family: 'Noto Sans KR', sans-serif;
-}
-
-*:focus {
-	outline: none;
-}
-
-body {
-	background-color: #faf9f7;
-}
-
-.container {
-	width: 1200px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-#usr-color {
-	color: #ef9173;
-	font-weight: bold;
-}
-
-table {
-	width: 800px;
-	margin: 70px auto;
-	border: 0.5px solid #58585a;
-	border-collapse: collapse;
-}
-
-tr, td {
-	text-align: center;
-	padding: 7px;
-}
-
-th {
-	text-align: center;
-	padding: 7px;
-	border-bottom: 0.5px solid #58585a;
-}
-
-.itemRow:hover {
-	background: #f5d1ca;
-	cursor: pointer;
-}
-
-button a {
-	color: #58585a;
-	text-decoration: none;
-}
-
-#logout {
-	background-color: #f5d1ca;
-	text-align: center;
-	padding: 5px;
-	color: #58585a;
-	border: none;
-	border-radius: 10px;
-	font-weight: bold;
-}
-
-#write {
-	width: 100px;
-	background-color: #f5d1ca;
-	text-align: center;
-	border: none;
-	padding: 8px;
-	color: #58585a;
-	border-radius: 10px;
-	margin-left: 200px;
-	font-weight: bold;
-}
-
-.fontCenter {
-	text-align: center;
-}
-
-.pageSelected {
-	color: red;
-	font-weight: bold;
-}
-
-a {
-	text-decoration: none;
-	color: black;
-}
-
-.pagingFont {
-	font-size: 1.3em;
-}
-
-.pagingFont:not(:first-child) {
-	margin-left: 13px;
-}
+	* {
+		font-family: 'Noto Sans KR', sans-serif;
+	}
+	*:focus { 
+		outline:none; 
+	}
+	body{
+		background-color: #faf9f7;
+	}
+	.container {
+		width: 1200px;
+		margin: 0 auto; 
+		padding: 20px;
+	}
+	#usr-color {
+		color: #ef9173;
+		font-weight: bold;
+	}
+	table {
+		width: 800px;
+		margin: 70px auto; 
+		border: 0.5px solid #58585a;
+		border-collapse: collapse;
+	}
+	tr, td{
+		text-align : center;
+		padding: 7px;
+	}
+	th {
+		text-align : center;
+		padding: 7px;
+		border-bottom: 0.5px solid #58585a;
+	}
+	.itemRow:hover {
+		background: #f5d1ca;
+		cursor : pointer;
+	}
+	button a {
+		color: #58585a;
+		text-decoration: none;
+	}
+	#logout {
+		background-color: #f5d1ca;
+		text-align: center;
+		padding: 5px;
+		color: #58585a;
+		border: none;
+		border-radius: 10px;
+		font-weight: bold;
+	}
+	#write {
+		width: 100px;
+		background-color: #f5d1ca;
+		text-align: center;
+		border: none;
+		padding: 8px;
+		color: #58585a;
+		border-radius: 10px;
+		margin-left: 200px;
+		font-weight : bold;
+	}
+	.fontCenter { text-align: center; }
+	.pageSelected { color:red; font-weight: bold; }
+	a {
+		text-decoration: none;
+		color:black;
+	}
+	.pagingFont {
+		font-size: 1.3em;
+	}
+	
+	.pagingFont:not(:first-child) {
+		margin-left: 13px;
+	}
+	
+	.containerPImg {
+		display: inline-block;	
+		width: 30px;
+		height: 30px;
+	    border-radius: 50%;
+	    overflow: hidden;
+	}
+	
+	.pImg {
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
+	}
 </style>
 </head>
 <body>
@@ -112,23 +103,22 @@ a {
 		<div class="usr-name">
 			<span id="usr-color">${loginUser.nm}</span>님 환영합니다
 			<a href="/profile">프로필</a>
-			<button id="logout">
-				<a href="/logout">로그아웃</a>
-			</button>
+			<button id="logout"><a href="/logout">로그아웃</a></button>
 		</div>
 		<div>
 			<form id="selFrm" action="/board/list" method="get">
 				<input type="hidden" name="searchText" value="${param.searchText}">
-				<input type="hidden" name="page" value="${page}"> 레코드 수 : <select
-					name="record_cnt" onchange="changeRecordCnt()">
+				<input type="hidden" name="page" value="${page}">
+				레코드 수 :
+				<select name="record_cnt" onchange="changeRecordCnt()">
 					<c:forEach begin="10" end="30" step="10" var="item">
 						<c:choose>
-							<c:when test="${recordCnt == item}">
+							<c:when test="${param.record_cnt == item}">
 								<option value="${item}" selected>${item}개</option>
 							</c:when>
 							<c:otherwise>
-								<option value="${item}">${item}개</option>
-							</c:otherwise>
+								<option value="${item}">${item}개</option>	
+							</c:otherwise>							
 						</c:choose>
 					</c:forEach>
 				</select>
@@ -139,23 +129,51 @@ a {
 				<th>No</th>
 				<th>제목</th>
 				<th>조회수</th>
+				<th> </th>
 				<th>작성자</th>
 				<th>작성일</th>
+				<th>좋아요수</th>
+				<th>댓글수</th>
+				<th>좋아요</th>
 			</tr>
 			<c:forEach items="${list}" var="item">
 				<tr class="itemRow" onclick="moveToDetail(${item.i_board})">
 					<td>${item.i_board}</td>
 					<td>${item.title}</td>
 					<td>${item.hits}</td>
-					<td>${item.nm}</td>
+					<td>
+						<div class="containerPImg">
+							<c:choose>
+								<c:when test="${item.profile_img != null}">
+									<img class="pImg" src="/img/user/${item.i_user}/${item.profile_img}">
+								</c:when>
+								<c:otherwise>
+									<img class="pImg" src="/img/default_profile.jpg">
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</td>
+					<td>
+						${item.nm}
+					</td>
 					<td>${item.r_dt}</td>
+					<td>${item.like_cnt}</td>
+					<td>${item.cmt_cnt}</td>
+					<td class="pointerCursor">
+                	<c:if test="${item.yn_like == 0 }">
+						<span class="material-icons">favorite_border</span>                	
+                	</c:if>
+                	<c:if test="${item.yn_like == 1}">
+                		<span class="material-icons" style="color: red;">favorite</span>
+                	</c:if>
+                </td>
+					
 				</tr>
 			</c:forEach>
 		</table>
 		<div>
 			<form action="/board/list">
-				<input type="search" name="searchText">
-				<input type="hidden" name="record_cnt" value="${recordCnt}">
+				<input type="search" name="searchText" value="${param.searchText}">
 				<input type="submit" value="검색">
 			</form>
 		</div>
@@ -166,8 +184,8 @@ a {
 						<span class="pagingFont pageSelected">${item}</span>
 					</c:when>
 					<c:otherwise>
-						<span class="pagingFont"> <a
-							href="/board/list?page=${item}&recordCnt=${recordCnt}&searchText=${param.searchText}">${item}</a>
+						<span class="pagingFont">
+							<a href="/board/list?page=${item}&record_cnt=${param.record_cnt}&searchText=${param.searchText}">${item}</a>
 						</span>
 					</c:otherwise>
 				</c:choose>
@@ -183,7 +201,7 @@ a {
 		}
 	
 		function moveToDetail(i_board) {
-			location.href = '/board/detail?i_board=' + i_board + '&page=${page}&recordCnt=${recordCnt}&searchText=${param.searchText}';
+			location.href = '/board/detail?page=${page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}&i_board=' + i_board
 		}
 	</script>
 </body>

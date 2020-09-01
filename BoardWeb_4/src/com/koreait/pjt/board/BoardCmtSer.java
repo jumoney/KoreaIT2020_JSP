@@ -57,7 +57,7 @@ public class BoardCmtSer extends HttpServlet {
 			BoardCmtDAO.updCmt(param);
 			break;
 		}
-
+		
 		response.sendRedirect("/board/detail?i_board=" + i_board);
 	}
 

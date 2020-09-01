@@ -24,49 +24,37 @@ import com.koreait.pjt.vo.UserVO;
 public class BoardDetailSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession hs = request.getSession();
-		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
-		
-		int page = MyUtils.getIntParameter(request, "page");
-		String searchText = request.getParameter("searchText");
-		int record_cnt = (int)hs.getAttribute("recordCnt");
-		System.out.println("넘어온 페이지:" + page);
-		System.out.println("넘어온 2:" + record_cnt);
-		page = (page == 0 ? 1 : page);
-		request.setAttribute("page", page);
-		request.setAttribute("record_cnt", record_cnt);
-		
-		
-		if(MyUtils.isLogout(request)) {
+		UserVO loginUser = MyUtils.getLoginUser(request);
+		if(loginUser == null) {
 			response.sendRedirect("/login");
 			return;
 		}
+		
 		String strI_board = request.getParameter("i_board");
 		int i_board = MyUtils.parseStrToInt(strI_board);
 		
-		// 단독으로 조회수 올리기 방지 --- [start]
-		ServletContext application = getServletContext(); // 어플리케이션 내장객체 얻어오기
-	      Integer readI_user = (Integer)application.getAttribute("read_" + strI_board);  
+		//단독으로 조회수 올리기 방지! --- [start]
+		ServletContext application = getServletContext(); //어플리케이션 내장객체 얻어오기
+		Integer readI_user = (Integer)application.getAttribute("read_" + strI_board);
 		if(readI_user == null || readI_user != loginUser.getI_user()) {
 			BoardDAO.addHits(i_board);
 			application.setAttribute("read_" + strI_board, loginUser.getI_user());
 		}
-		// 단독으로 조회수 올기기 방지! == [end]
+		//단독으로 조회수 올리기 방지! --- [end]
+		
 		BoardVO param = new BoardVO();
-		param.setI_board(i_board);
 		param.setI_user(loginUser.getI_user());
+		param.setI_board(i_board);
 		request.setAttribute("data", BoardDAO.selBoard(param));
 		
-		request.setAttribute("cmtList", BoardCmtDAO.selCmtList(i_board)); 
+		request.setAttribute("cmtList", BoardCmtDAO.selCmtList(i_board));
 		
 		ViewResolver.forward("board/detail", request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+
 	}
 
 }

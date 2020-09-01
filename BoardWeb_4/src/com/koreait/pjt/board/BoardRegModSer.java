@@ -20,67 +20,82 @@ import com.koreait.pjt.vo.BoardDomain;
 import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
 
-@WebServlet("/board/regmod")
+@WebServlet("/regmod")
 public class BoardRegModSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	// 화면 띄우는 용도(등록창/수정창)
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		HttpSession hs = request.getSession();
-		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
-		if (MyUtils.isLogout(request)) {
+       
+	//화면 띄우는 용도(등록창/수정창)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+		UserVO loginUser = MyUtils.getLoginUser(request);
+		if(loginUser == null) {
 			response.sendRedirect("/login");
 			return;
 		}
-
+		BoardVO param = new BoardVO();
+		param.setI_user(loginUser.getI_user());
+		
 		String strI_board = request.getParameter("i_board");
-
-		if (strI_board != null) {
-			int i_board = MyUtils.parseStrToInt(strI_board, 0); // 문자열을 정수로 바꿈.혹시 숫자가 아닌 문자열이 섞여있으면 0이 리턴
-			BoardVO param = new BoardVO();
+		if(strI_board != null) { //수정
+			int i_board = MyUtils.parseStrToInt(strI_board);
+			
 			param.setI_board(i_board);
-			param.setI_user(loginUser.getI_user());
-			request.setAttribute("data", BoardDAO.selBoard(param)); // DB로 값 받기
+			request.setAttribute("data", BoardDAO.selBoard(param));
 		}
-
-		ViewResolver.forwardLoginChk("board/regmod", request, response);
+		
+		ViewResolver.forward("board/regmod", request, response);
 	}
 
-	// 처리 용도(DB에 등록/수정)실시
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	//처리 용도(DB에 등록/수정)실시
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String strI_board = request.getParameter("i_board");
 		String title = request.getParameter("title");
 		String ctnt = request.getParameter("ctnt");
-		String strI_board = request.getParameter("i_board");
 		
 		HttpSession hs = request.getSession();
 		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
-
+		
+		System.out.println("title : " + title);
+		System.out.println("ctnt : " + ctnt);
+		
+		String filterCtnt1 = scriptFilter(ctnt);
+		String filterCtnt2 = swearWordFilter(filterCtnt1);
+		
 		BoardVO param = new BoardVO();
 		param.setTitle(title);
-		param.setCtnt(ctnt);
+		param.setCtnt(filterCtnt2);
 		param.setI_user(loginUser.getI_user());
 		int result = 0;
 		
-		if ("".equals(strI_board)) {
-			result = BoardDAO.insBoard(param); // 새글
+		if("".equals(strI_board)) { //등록
+			result = BoardDAO.insBoard(param);
 			response.sendRedirect("/board/list");
-		}else{
-			int i_board = MyUtils.parseStrToInt(request.getParameter("i_board"));
+		} else { //수정
+			int i_board = MyUtils.parseStrToInt(strI_board);
 			param.setI_board(i_board);
-			result = BoardDAO.updBoard(param); // 수정
-
-			response.sendRedirect("/board/detail?i_board="+i_board);
+			result = BoardDAO.updBoard(param);
+			response.sendRedirect("/board/detail?i_board=" + strI_board);
 		}
-
-
-		if (result != 1) {
-			// "에러가 발생하였습니다. 관리자에게 문의 해주세요"
-			request.setAttribute("msg", "에러가 발생하였습니다. 관리자에게 문의 해주세요");
-			request.setAttribute("data", param);
-		}
-
+		
 	}
-
+	//욕 필터
+	private String swearWordFilter(final String ctnt) {
+		String[] filters = {"개새끼", "미친년", "ㄱ ㅐ ㅅ ㅐ ㄲ ㅣ"};
+		String result = ctnt;
+		for(int i=0; i<filters.length; i++) {
+			result = result.replace(filters[i], "***");
+		}
+		return result;
+	}
+	
+	//스크립트 필터
+	private String scriptFilter(final String ctnt) {
+		String[] filters = {"<script>", "</script>"};
+		String[] filterReplaces = {"&lt;script&gt;", "&lt;/script&gt;"};
+		
+		String result = ctnt;
+		for(int i=0; i<filters.length; i++) {
+			result = result.replace(filters[i], filterReplaces[i]);
+		}
+		return result;
+	}
 }
