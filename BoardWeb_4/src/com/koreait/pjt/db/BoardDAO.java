@@ -16,50 +16,33 @@ import com.koreait.pjt.vo.UserVO;
 
 public class BoardDAO {
 	
-	public static int insBoardLike(BoardVO param) {		
+	public static int insBoardLike(BoardVO param) {
 		String sql = " INSERT INTO t_board4_like "
-				+ " (i_board, i_user) "
+				+ " (i_user, i_board) "
 				+ " VALUES "
 				+ " (?, ?) ";
-				
+		
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {				
-				ps.setInt(1, param.getI_board());
-				ps.setInt(2, param.getI_user());		
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getI_user());
+				ps.setInt(2, param.getI_board());
 			}
 		});
 	}
 	
-	public static int updBoard(final BoardVO param) {		
-		String sql = " UPDATE t_board4 "
-				+ " SET  "
-				+ " title = ?, ctnt = ? , m_dt = SYSDATE "
-				+ " WHERE i_board = ? "
-				+ " AND i_user = ?";
-				
+	public static int insBoard(BoardVO param) {
+		String sql = " INSERT INTO t_board4 "
+				+ " (i_board, title, ctnt, i_user) "
+				+ " VALUES "
+				+ " (seq_board.nextval, ?, ?, ?) ";
+		
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {				
+			public void update(PreparedStatement ps) throws SQLException {
 				ps.setNString(1, param.getTitle());
 				ps.setNString(2, param.getCtnt());
-				ps.setInt(3, param.getI_board());
-				ps.setInt(4, param.getI_user());
-			}
-		});
-	}
-	
-	public static int addHits(final int i_board) {		
-		String sql = " UPDATE t_board4 "
-				+ " SET  "
-				+ " hits = hits + 1"
-				+ " WHERE i_board = ? ";
-				
-		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
-			@Override
-			public void update(PreparedStatement ps) throws SQLException {				
-				ps.setInt(1, i_board);
-				
+				ps.setInt(3, param.getI_user());
 			}
 		});
 	}
@@ -71,39 +54,58 @@ public class BoardDAO {
 				+ " FROM t_board4 A INNER JOIN t_user B ON A.i_user = B.i_user "
 				+ " ORDER BY i_board DESC ";
 		*/
-		String sql = " SELECT A.* " + 
-				" FROM ( " + 
-				" SELECT ROWNUM as RNUM, A.* FROM ( " + 
-				" SELECT A.i_board, A.title, A.hits, A.i_user, A.r_dt, B.nm, B.profile_img, nvl(C.cnt, 0) as like_cnt " + 
-				" , nvl(D.cmt_cnt,0) as cmt_cnt " + 
-				", DECODE(E.i_board, null, 0, 1)as yn_like " + 
-				" FROM t_board4 A " + 
-				" INNER JOIN t_user B ON A.i_user = B.i_user " + 
-				" LEFT JOIN ( " + 
-				" SELECT i_board, COUNT(i_board) AS cnt FROM t_board4_like GROUP BY i_board " + 
-				" )C  " + 
-				" ON A.i_board = C.i_board " + 
-				" LEFT JOIN(  " + 
-				" SELECT i_board, COUNT(i_board) as cmt_cnt FROM t_board4_cmt GROUP BY i_board " + 
-				" )D " + 
-				" ON A.i_board = D.i_board " + 
-				" LEFT JOIN ( " + 
-				"    SELECT i_board FROM t_board4_like WHERE i_user = ? " + 
-				" )E " + 
-				" ON A.i_board = E.i_board " + 
-				" WHERE A.title LIKE ? " + 
-				" ORDER BY i_board DESC " + 
-				" ) A WHERE ROWNUM <=? " + 
-				" ) A WHERE A.RNUM > ? ";
+		String sql = " SELECT A.* FROM ( "
+				+ " SELECT ROWNUM as RNUM, A.* FROM ( "
+				+ " 		SELECT A.i_board, A.title, A.hits, A.i_user, A.r_dt, B.nm, B.profile_img "
+				+ "         , nvl(C.cnt, 0) as like_cnt "
+				+ "			, nvl(D.cnt, 0) as cmt_cnt "
+				+ "			, DECODE(E.i_board, null, 0, 1) as yn_like "
+				+ " 		FROM t_board4 A "
+				+ " 		INNER JOIN t_user B "
+				+ " 		ON A.i_user = B.i_user"
+				+ "			LEFT JOIN ( "  
+				+ "    			SELECT i_board, count(i_board) as cnt FROM t_board4_like GROUP BY i_board " 
+				+ "			) C "  
+				+ "			ON A.i_board = C.i_board "
+				+ "			LEFT JOIN ( "
+				+ "				SELECT i_board, count(i_board) as cnt FROM t_board4_cmt GROUP BY i_board "
+				+ "			) D "
+				+ "			ON A.i_board = D.i_board "
+				+ "			LEFT JOIN ( "
+				+ "				 SELECT i_board FROM t_board4_like WHERE i_user = ? "
+				+ "			) E "
+				+ "			ON A.i_board = E.i_board "
+				+ " 		WHERE  ";
+				switch(param.getSearchType()) {
+				case "a":					
+					sql += " A.title like ? ";
+					break;
+				case "b":
+					sql += " A.ctnt like ? ";
+					break;
+				case "c":
+					sql += " (A.ctnt like ? or A.title like ?) ";
+					break;
+				}
+		
+				sql += " 		ORDER BY i_board DESC "
+				+ " 	) A WHERE ROWNUM <= ? "
+				+ " ) A WHERE A.RNUM > ? ";
 		
 		int result = JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, param.getI_user());
-				ps.setNString(2, param.getSearchText());
-				ps.setInt(3, param.geteIdx());
-				ps.setInt(4, param.getsIdx());
+				int seq = 1;
+				ps.setInt(seq, param.getI_user()); //로그인한 사람의 i_user
+				ps.setNString(++seq, param.getSearchText());
+				
+				if("c".equals(param.getSearchType())) {
+					ps.setNString(++seq, param.getSearchText());	
+				}
+				
+				ps.setInt(++seq, param.geteIdx());
+				ps.setInt(++seq, param.getsIdx());
 			}
 
 			@Override
@@ -116,8 +118,8 @@ public class BoardDAO {
 					String r_dt = rs.getNString("r_dt");
 					String nm = rs.getNString("nm");
 					String profile_img = rs.getNString("profile_img");
-					int cmt_cnt = rs.getInt("cmt_cnt");
 					int like_cnt = rs.getInt("like_cnt");
+					int cmt_cnt = rs.getInt("cmt_cnt");
 					int yn_like = rs.getInt("yn_like");
 					
 					BoardDomain vo = new BoardDomain();
@@ -128,8 +130,8 @@ public class BoardDAO {
 					vo.setR_dt(r_dt);
 					vo.setNm(nm);
 					vo.setProfile_img(profile_img);
-					vo.setCmt_cnt(cmt_cnt);
 					vo.setLike_cnt(like_cnt);
+					vo.setCmt_cnt(cmt_cnt);
 					vo.setYn_like(yn_like);
 					
 					list.add(vo);
@@ -141,32 +143,8 @@ public class BoardDAO {
 		return list;
 	}
 	
-	//페이징 숫자 가져오기 
-		public static int selPagingCnt(final BoardDomain param) {
-			String sql = " SELECT CEIL(COUNT(i_board) / ?) FROM t_board4 "
-					+ " WHERE title LIKE ? ";
-			
-			return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
-
-				@Override
-				public void prepared(PreparedStatement ps) throws SQLException {
-					ps.setInt(1, param.getRecord_cnt());
-					ps.setNString(2, param.getSearchText());
-				}
-
-				@Override
-				public int executeQuery(ResultSet rs) throws SQLException {
-					if(rs.next()) {
-						return rs.getInt(1);
-					}
-					return 0;
-				}
-				
-			});
-		}
-	
-	public static BoardDomain selBoard(BoardVO param) {
-		BoardDomain result = new BoardDomain();
+	public static BoardDomain selBoard(final BoardVO param) {
+		final BoardDomain result = new BoardDomain();
 		result.setI_board(param.getI_board());
 		
 		String sql = " SELECT B.profile_img, B.nm, A.i_user "
@@ -207,57 +185,100 @@ public class BoardDAO {
 		return result;
 	}
 	
+	//페이징 숫자 가져오기 
+	public static int selPagingCnt(final BoardDomain param) {
+		String sql = " SELECT CEIL(COUNT(i_board) / ?) FROM t_board4 WHERE ";
+		
+		switch(param.getSearchType()) {
+		case "a":					
+			sql += " title like ? ";
+			break;
+		case "b":
+			sql += " ctnt like ? ";
+			break;
+		case "c":
+			sql += " (ctnt like ? or title like ?) ";
+			break;
+		}				
+		
+		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getRecord_cnt());
+				ps.setNString(2, param.getSearchText());				
+				if(param.getSearchType().equals("c")) {
+					ps.setNString(3, param.getSearchText());	
+				}
+			}
+
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				if(rs.next()) {
+					return rs.getInt(1);
+				}
+				return 0;
+			}
+			
+		});
+	}
 	
-	public static int insBoard(BoardVO param) {		
-		String sql = " INSERT INTO t_board4 "
-				+ " (i_board, title, ctnt, i_user) "
-				+ " VALUES "
-				+ " (seq_board.nextval, ?, ?, ?) ";
-				
+	public static int updBoard(final BoardVO param) {
+		String sql = " UPDATE t_board4 "
+				+ " SET m_dt = sysdate "
+				+ " , title = ? "
+				+ " , ctnt = ? "
+				+ " WHERE i_board = ? "
+				+ " AND i_user = ? ";
+		
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {				
+			public void update(PreparedStatement ps) throws SQLException {
 				ps.setNString(1, param.getTitle());
 				ps.setNString(2, param.getCtnt());
-				ps.setInt(3, param.getI_user());
-						
+				ps.setInt(3, param.getI_board());
+				ps.setInt(4, param.getI_user());
 			}
 		});
 	}
 	
-	public static int delBoard(BoardVO param) {
-		
-		String sql = " DELETE "
-				+ " FROM t_board4 "
-				+ " WHERE i_board = ? AND i_user = ? ";
-			
-		
-		int resultInt = JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+	public static void addHits(final int i_board) {
+		String sql = " UPDATE t_board4 "
+				+ " SET hits = hits + 1 "
+				+ " WHERE i_board = ? ";
+		JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {				
-				ps.setInt(1, param.getI_board());
-				ps.setInt(2, param.getI_user());
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, i_board);
 			}
 		});
-		
-		return resultInt;
 	}
 	
 	public static int delBoardLike(BoardVO param) {
+		String sql = " DELETE FROM t_board4_like "
+				+ " WHERE i_user = ? AND i_board = ? ";
 		
-		String sql = " DELETE "
-				+ " FROM t_board4_like "
-				+ " WHERE i_board = ? AND i_user = ? ";
-			
-		
-		int resultInt = JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {				
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getI_user());
+				ps.setInt(2, param.getI_board());
+			}
+		});
+	}
+	
+	public static int delBoard(final BoardVO param) {
+		String sql = " DELETE FROM t_board4 WHERE i_board = ?  AND i_user = ? ";
+		
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {
 				ps.setInt(1, param.getI_board());
 				ps.setInt(2, param.getI_user());
 			}
 		});
-		
-		return resultInt;
 	}
+	
 }
+

@@ -7,12 +7,21 @@ public class BoardDomain extends BoardVO {
 	private int sIdx;
 	private int eIdx;
 	private String searchText;
+	private String searchType;
 	private String profile_img;
 	private int like_cnt;
 	private int cmt_cnt;
 		
 	public int getLike_cnt() {
 		return like_cnt;
+	}
+
+	public String getSearchType() {
+		return searchType;
+	}
+
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
 	}
 
 	public void setLike_cnt(int like_cnt) {

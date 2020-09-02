@@ -98,6 +98,11 @@
 			height: 100%;
 			width: 100%;
 		}
+		.highlight{
+			color:red;
+			font-weight: bold;
+			background-color: yellow;
+		}
     </style>
 </head>
 <body>
@@ -105,7 +110,7 @@
         <table>
             <tr id="title">
                 <th>제목</th>
-                <th colspan="6">${data.title}</th>
+                <th colspan="6" id="elTitle">${data.title}</th>
             </tr>
             <tr class="boardInfo">
                 <th id="nm">작성자</th>
@@ -136,12 +141,12 @@
                 </td>
             </tr>
         </table>
-        <div class="ctnt">
+        <div class="ctnt" id="elCtnt">
             ${data.ctnt}
         </div>
         <div class="btn">
              <button type="button">
-             	<a href="/board/list?page=${param.page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}">목록</a>
+             	<a href="/board/list?page=${param.page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}&searchType=${param.searchType}">목록</a>
              </button>
              <c:if test="${loginUser.i_user == data.i_user }">
                 <button type="submit">
@@ -226,12 +231,48 @@
     	}
     
     	function toggleLike(yn_like) {
-    		location.href='/board/toggleLike?page=${param.page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}&i_board=${data.i_board}&yn_like=' + yn_like
+    		location.href='/board/toggleLike?page=${param.page}&record_cnt=${param.record_cnt}&searchType=${param.searchType}&searchText=${param.searchText}&i_board=${data.i_board}&yn_like=' + yn_like
     	}
     
         function submitDel() {
             delFrm.submit()
         }
+        
+        function doHighlight() {
+        		var searchText = '${param.searchText}';
+        		var searchType = '${param.searchType}';
+        		
+        		switch(searchType) {
+        		case 'a'://제목
+        			var txt = elTitle.innerText;
+        			txt = txt.replace(new RegExp('${param.searchText}', 'gi'), '<span class="highlight">' + searchText + '</span>');
+        			elTitle.innerHTML = txt;
+        			console.log('txt : ' + txt);
+        			break;
+        		case 'b': //내용
+        			var txt = elCtnt.innerText;
+        			txt = txt.replace(new RegExp('${param.searchText}', 'gi'), '<span class="highlight">' + searchText + '</span>');
+        			elCtnt.innerHTML = txt;
+        			console.log('txt : ' + txt);
+        			break;
+        		case 'c': //제목+내용
+        			var txt = elTitle.innerText;
+        			txt = txt.replace(new RegExp('${param.searchText}', 'gi'), '<span class="highlight">' + searchText + '</span>');
+        			elTitle.innerHTML = txt;
+        			console.log('txt : ' + txt);
+        			
+        			var txt = elCtnt.innerText;
+        			txt = txt.replace(new RegExp('${param.searchText}', 'gi'), '<span class="highlight">' + searchText + '</span>');
+        			elCtnt.innerHTML = txt;
+        			console.log('txt : ' + txt);
+        			break;
+        		}
+        		
+        		
+        }
+        
+        doHighlight()
+        
     </script>
 </body>
 

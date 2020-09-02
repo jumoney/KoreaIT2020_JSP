@@ -20,7 +20,7 @@ import com.koreait.pjt.vo.BoardDomain;
 import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
 
-@WebServlet("/regmod")
+@WebServlet("/board/regmod")
 public class BoardRegModSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

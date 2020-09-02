@@ -13,39 +13,40 @@ import com.koreait.pjt.MyUtils;
 import com.koreait.pjt.db.BoardDAO;
 import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
-
+import java.net.URLEncoder;
 
 @WebServlet("/board/toggleLike")
 public class ToggleLikeSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-   
+       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String strI_board = request.getParameter("i_board");
+		String strYn_like = request.getParameter("yn_like");
+		String page = request.getParameter("page");
+		String record_cnt = request.getParameter("record_cnt");
+		String searchText = request.getParameter("searchText");
+		String searchType = request.getParameter("searchType");
+		
+		searchText = URLEncoder.encode(searchText, "UTF-8");
+		
 		UserVO loginUser = MyUtils.getLoginUser(request);
 		
-		int i_board = MyUtils.parseStrToInt(request.getParameter("i_board"));
-		int page = MyUtils.parseStrToInt(request.getParameter("page"));
-		int record_cnt = MyUtils.parseStrToInt(request.getParameter("record_cnt"));
-		String searchText = request.getParameter("searchText");
-		int yn_like = MyUtils.parseStrToInt(request.getParameter("yn_like"), 3);
+		int i_board = MyUtils.parseStrToInt(strI_board);
+		int yn_like = MyUtils.parseStrToInt(strYn_like, 3);
 		
 		BoardVO param = new BoardVO();
-		
 		param.setI_board(i_board);
 		param.setI_user(loginUser.getI_user()); //로그인한 사람의 i_user
 		
-		if(yn_like == 0) { // 좋아요 처리
+		if(yn_like == 0) { //좋아요 처리
 			BoardDAO.insBoardLike(param);
-		}else if(yn_like == 1) { // 좋아요 처리 취소
-			
+		} else if(yn_like == 1) { //좋아요 취소 처리
 			BoardDAO.delBoardLike(param);
 		}
-			
-		response.sendRedirect("/board/detail?i_board=" + i_board + "&page=" + page + "&record_cnt=" + record_cnt + "&searchText=" + searchText);
-		return;
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		String target = String.format("/board/detail?i_board=%s&page=%s&record_cnt=%s&searchText=%s&searchType=%s"
+				, strI_board, page, record_cnt, searchText, searchType);
+		
+		response.sendRedirect(target);
 	}
-
 }
