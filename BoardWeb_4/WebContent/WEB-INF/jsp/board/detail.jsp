@@ -5,6 +5,10 @@
 <html>
 
 <head>
+ <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+  />
     <meta charset="UTF-8">
     <title>상세페이지</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -51,6 +55,9 @@
             width: 10%;
         }
         #hits-1 {
+            width: 10%;
+        }
+        #like_cnt-1 {
             width: 10%;
         }
         .ctnt {
@@ -103,6 +110,37 @@
 			font-weight: bold;
 			background-color: yellow;
 		}
+		#likeListContainer {
+			border: 1px solid #bdc3c7;
+			position: absolute;
+			left: -78px;
+			top: 40px;
+			width:auto;
+			
+			over-flow-y: auto;
+			background-color: white;
+			opacity: 0;
+			transition-duration: 500ms
+			
+		}
+		#like_cnt-1 {
+			position: relative;
+		}
+		#like_cnt-1:hover #likeListContainer {
+			opacity: 1;
+		}
+		.containerPImg {
+		display: inline-block;	
+		width: 30px;
+		height: 30px;
+	    border-radius: 50%;
+	    overflow: hidden;
+	}
+		.pImg {
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
+	}
     </style>
 </head>
 <body>
@@ -110,7 +148,7 @@
         <table>
             <tr id="title">
                 <th>제목</th>
-                <th colspan="6" id="elTitle">${data.title}</th>
+                <th colspan="7" id="elTitle">${data.title}</th>
             </tr>
             <tr class="boardInfo">
                 <th id="nm">작성자</th>
@@ -139,6 +177,33 @@
                 		<span class="material-icons" style="color: red;">favorite</span>
                 	</c:if>
                 </td>
+                <td id="like_cnt-1" class="pointerCursor">
+               		 <div id="likeListContainer">
+               			<table style="width:150px; height: 100%; border: none">
+   							<c:forEach items="${likeList}" var="item">
+   								<tr>
+   									<td>
+   									<div class="containerPImg">
+   									<c:choose>
+   									<c:when test="${item.profile_img != null}">
+									<img class="pImg" src="/img/user/${item.i_user}/${item.profile_img}">
+								</c:when>
+								<c:otherwise>
+									<img class="pImg" src="/img/default_profile.jpg">
+								</c:otherwise>
+								</c:choose>
+								</div>
+								</td>
+   									<td>${item.nm}</td>
+   								</tr>
+   							</c:forEach>
+   							</table>
+   					</div>
+               	    <c:if test="${data.like_cnt > 0 }">
+                		${data.like_cnt} 
+                	</c:if>
+                	
+                </td> 
             </tr>
         </table>
         <div class="ctnt" id="elCtnt">
@@ -146,7 +211,7 @@
         </div>
         <div class="btn">
              <button type="button">
-             	<a href="/board/list?page=${param.page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}&searchType=${param.searchType}">목록</a>
+             	<a href="/board/list?page=${param.page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}&searchType=${searchType}">목록</a>
              </button>
              <c:if test="${loginUser.i_user == data.i_user }">
                 <button type="submit">

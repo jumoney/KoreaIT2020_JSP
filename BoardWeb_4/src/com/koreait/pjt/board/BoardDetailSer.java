@@ -47,7 +47,7 @@ public class BoardDetailSer extends HttpServlet {
 		param.setI_user(loginUser.getI_user());
 		param.setI_board(i_board);
 		request.setAttribute("data", BoardDAO.selBoard(param));
-		
+		request.setAttribute("likeList", BoardDAO.selBoardLikeList(i_board));
 		request.setAttribute("cmtList", BoardCmtDAO.selCmtList(i_board));
 		
 		ViewResolver.forward("board/detail", request, response);
