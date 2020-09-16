@@ -1,3 +1,4 @@
 function test() {
-	alert('ddd');
+	
+	alert('ddd')
 }

@@ -19,21 +19,18 @@ public class CommonDAO {
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, i_m);
+				ps.setInt(1, i_m);				
 			}
 
 			@Override
-			public void executeQuery(ResultSet rs) throws SQLException {				
+			public void executeQuery(ResultSet rs) throws SQLException {
 				while(rs.next()) {
 					CodeDomain cd = new CodeDomain();
 					cd.setCd(rs.getInt("cd"));
-					cd.setI_m(rs.getInt("i_m"));
 					cd.setVal(rs.getNString("val"));
 					list.add(cd);
 				}
-				
 			}
-			
 		});
 		
 		return list;

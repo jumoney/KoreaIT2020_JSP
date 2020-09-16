@@ -33,7 +33,7 @@ public class UserService {
 			String salt = dbResult.getSalt();			
 			String encryptPw = SecurityUtils.getEncrypt(param.getUser_pw(), salt);
 			
-			if(encryptPw.equals(dbResult.getUser_pw())) {
+			if(encryptPw.equals(dbResult.getUser_pw())) { //로그인 성공				
 				param.setUser_pw(null);
 				param.setI_user(dbResult.getI_user());
 				param.setNm(dbResult.getNm());

@@ -19,10 +19,11 @@
 	<script>
 		function chkId() {
 			const user_id = frm.user_id.value
+			
 			axios.get('/user/ajaxIdChk', {
 				params: {
-					user_id
-				} 
+					'user_id': user_id
+				}
 			}).then(function(res) {
 				console.log(res)
 				if(res.data.result == 2) { //아이디 없음
@@ -31,6 +32,7 @@
 					idChkResult.innerText = '이미 사용중입니다.'
 				}
 			})
+			
 		}
 	</script>
 </div>

@@ -3,6 +3,7 @@ package com.koreait.matzip.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.koreait.matzip.CommonUtils;
 import com.koreait.matzip.Const;
 import com.koreait.matzip.ViewRef;
 import com.koreait.matzip.vo.UserVO;
@@ -79,6 +80,9 @@ public class UserController {
 	
 	public String ajaxIdChk(HttpServletRequest request) {
 		String user_id = request.getParameter("user_id");
+		
+		System.out.println("user_id : " + user_id);
+		
 		UserVO param = new UserVO();
 		param.setUser_id(user_id);
 		param.setUser_pw("");
@@ -94,3 +98,13 @@ public class UserController {
 		return "redirect:/user/login";
 	}
 }
+
+
+
+
+
+
+
+
+
+
